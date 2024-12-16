@@ -30,6 +30,11 @@ void RegisterDialog::on_get_code_btn_clicked()
     if (match) {
         showTip(tr("邮箱地址正确"), true);
         // 发送 http 验证码
+        QJsonObject json_obj;
+        json_obj["email"] = email;
+        HttpMgr::GetInstance()->PostHttpReq(QUrl(gate_url_prefix + "/get_varifycode"),
+                                            json_obj, ReqId::ID_GET_VARIFY_CODE, Modules::REGISTERMOD);
+
     } else {
         showTip(tr("邮箱地址不正确"), false);
     }
