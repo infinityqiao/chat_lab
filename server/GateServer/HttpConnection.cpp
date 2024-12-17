@@ -1,7 +1,7 @@
 #include "HttpConnection.h"
 #include "LogicSystem.h"
 
-HttpConnection::HttpConnection(tcp::socket socket): _socket(std::move(socket)) {
+HttpConnection::HttpConnection(boost::asio::io_context& ioc): _socket(ioc) {
 }
 
 void HttpConnection::Start() {
@@ -22,6 +22,11 @@ void HttpConnection::Start() {
 		}
 
 		});
+}
+
+tcp::socket& HttpConnection::GetSocket()
+{
+	return _socket;
 }
 
 unsigned char ToHex(unsigned char x)
