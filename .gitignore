@@ -85,3 +85,6 @@ CMakeLists.txt.user*
 Debug
 x64
 .vs
+
+# VerifyServer
+node_modules
