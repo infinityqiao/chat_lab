@@ -2,7 +2,7 @@
 #include "const.h"
 RedisMgr::RedisMgr() {
 
-	_con_pool.reset(new RedisConPool(5, "*", 6380, "123456"));
+	_con_pool.reset(new RedisConPool(5, "106.14.246.18", 6380, "123456"));
 }
 
 RedisMgr::~RedisMgr() {
