@@ -32,7 +32,7 @@ public slots:
 signals:
     void sig_con_success(bool bsuccess);
     void sig_send_data(ReqId reqId, QByteArray data);
-    void sig_swich_chatdlg();
+    void sig_switch_chatdlg();
     void sig_load_apply_list(QJsonArray json_array);
     void sig_login_failed(int);
 

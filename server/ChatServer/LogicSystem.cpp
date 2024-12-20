@@ -447,8 +447,6 @@ void LogicSystem::DealChatTextMsg(std::shared_ptr<CSession> session, const short
 	ChatGrpcClient::GetInstance()->NotifyTextChatMsg(to_ip_value, text_msg_req, rtvalue);
 }
 
-
-
 bool LogicSystem::isPureDigit(const std::string& str)
 {
 	for (char c : str) {

@@ -35,7 +35,7 @@ void CServer::StartAccept() {
 void CServer::ClearSession(std::string uuid) {
 	
 	if (_sessions.find(uuid) != _sessions.end()) {
-		//移除用户和session的关联
+		// 移除用户和 session 的关联
 		UserMgr::GetInstance()->RmvUserSession(_sessions[uuid]->GetUserId());
 	}
 

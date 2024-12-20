@@ -1,6 +1,7 @@
 #include "tcpmgr.h"
 #include <QAbstractSocket>
 #include <QJsonDocument>
+#include "usermgr.h"
 
 TcpMgr::TcpMgr():_host(""),_port(0),_b_recv_pending(false),_message_id(0),_message_len(0)
 {
@@ -21,7 +22,7 @@ TcpMgr::TcpMgr():_host(""),_port(0),_b_recv_pending(false),_message_id(0),_messa
         forever {
             // 先解析头部
             if(!_b_recv_pending){
-                // 检查缓冲区中的数据是否足够解析出一个消息头（消息ID + 消息长度）
+                // 检查缓冲区中的数据是否足够解析出一个消息头（消息 ID + 消息长度）
                 if (_buffer.size() < static_cast<int>(sizeof(quint16) * 2)) {
                     return; // 数据不够，等待更多数据
                 }
@@ -87,9 +88,9 @@ TcpMgr::TcpMgr():_host(""),_port(0),_b_recv_pending(false),_message_id(0),_messa
     QObject::connect(&_socket, &QTcpSocket::disconnected, [&]() {
         qDebug() << "Disconnected from server.";
     });
-    //连接发送信号用来发送数据
+    // 连接发送信号用来发送数据
     QObject::connect(this, &TcpMgr::sig_send_data, this, &TcpMgr::slot_send_data);
-    //注册消息
+    // 注册消息
     initHandlers();
 }
 
@@ -103,7 +104,7 @@ void TcpMgr::initHandlers()
     _handlers.insert(ID_CHAT_LOGIN_RSP, [this](ReqId id, int len, QByteArray data){
         Q_UNUSED(len);
         qDebug()<< "handle id is "<< id ;
-        // 将QByteArray转换为QJsonDocument
+        // 将 QByteArray 转换为 QJsonDocument
         QJsonDocument jsonDoc = QJsonDocument::fromJson(data);
 
         // 检查转换是否成功
@@ -128,8 +129,11 @@ void TcpMgr::initHandlers()
             emit sig_login_failed(err);
             return;
         }
+        UserMgr::GetInstance()->SetUid(jsonObj["uid"].toInt());
+        UserMgr::GetInstance()->SetName(jsonObj["name"].toString());
+        UserMgr::GetInstance()->SetToken(jsonObj["token"].toString());
 
-        emit sig_swich_chatdlg();
+        emit sig_switch_chatdlg();
     });
 }
 
