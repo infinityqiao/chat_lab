@@ -3,6 +3,8 @@
 #include <QAction>
 #include <QRandomGenerator>
 #include <chatuserwid.h>
+#include <QMovie>
+#include <QTimer>
 
 ChatDialog::ChatDialog(QWidget *parent)
     : QDialog(parent)
@@ -42,6 +44,9 @@ ChatDialog::ChatDialog(QWidget *parent)
 
     ShowSearch(false);
 
+    //连接加载信号和槽
+    connect(ui->chat_user_list, &ChatUserList::sig_loading_chat_user, this, &ChatDialog::slot_loading_chat_user);
+
     addChatUserList();
 }
 
@@ -50,11 +55,13 @@ ChatDialog::~ChatDialog()
     delete ui;
 }
 
-std::vector<QString>  strs ={"我好想吃草莓啊，可是草莓太贵了",
-                             "Man！What Can I say？",
-                             "Mamba Out！See u again",
-                             "那我问你那我问你，你是男的女的",
-                             "白银说的话，就像是癌症晚期说的话，他都这样了，你为什么不顺从他呢。"};
+std::vector<QString>  strs ={
+    "我好想吃草莓啊，可是草莓太贵了",
+    "Man！What Can I say？",
+    "Mamba Out！See u again",
+    "那我问你那我问你，你是男的女的",
+    "白银说的话，就像是癌症晚期说的话，他都这样了，你为什么不顺从他呢。"
+};
 
 std::vector<QString> heads = {
     ":/res/head_1.jpg",
@@ -113,4 +120,36 @@ void ChatDialog::ShowSearch(bool bsearch)
         ui->con_user_list->show();
         _mode = ChatUIMode::ContactMode;
     }
+}
+
+void ChatDialog::slot_loading_chat_user()
+{
+    if(_b_loading){
+        return;
+    }
+
+    _b_loading = true;
+
+    QLabel *loading_item = new QLabel(this);
+    QMovie *movie = new QMovie(":/res/loading.gif");
+
+    loading_item->setMovie(movie);
+    loading_item->setFixedSize(250, 70);
+    loading_item->setAlignment(Qt::AlignCenter);
+    movie->setScaledSize(QSize(20,20));
+
+    QListWidgetItem *item = new QListWidgetItem;
+    item->setSizeHint(QSize(250, 70));
+    ui->chat_user_list->addItem(item);
+    ui->chat_user_list->setItemWidget(item, loading_item);
+    movie->start();
+
+    QTimer::singleShot(0, this, [this, item]() {
+        qDebug() << "add new Data to list";
+        addChatUserList();
+        ui->chat_user_list->takeItem(ui->chat_user_list->row(item));
+        ui->chat_user_list->update();
+        _b_loading = false;
+    });
+
 }

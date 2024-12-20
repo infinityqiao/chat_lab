@@ -30,8 +30,13 @@ void ChatUserWid::SetInfo(QString name, QString head, QString msg)
     ui->icon_lb->setPixmap((pixmap.scaled(ui->icon_lb->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation)));
     ui->icon_lb->setScaledContents(true);
 
-    ui->user_name_lb->setText(_name);
-    ui->user_chat_lb->setText(_msg);
+    QFontMetrics fontMetrics_name(ui->user_name_lb->font());
+    QString nameText = fontMetrics_name.elidedText(_name, Qt::ElideRight, ui->user_name_lb->width());
+    QFontMetrics fontMetrics_msg(ui->user_chat_lb->font());
+    QString msgText = fontMetrics_msg.elidedText(_msg, Qt::ElideRight, ui->user_chat_lb->width());
+
+    ui->user_name_lb->setText(nameText);
+    ui->user_chat_lb->setText(msgText);
 }
 
 
