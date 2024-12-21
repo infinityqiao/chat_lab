@@ -22,6 +22,7 @@ SOURCES += \
     clickedbtn.cpp \
     clickedlabel.cpp \
     customizeedit.cpp \
+    findsuccessdlg.cpp \
     global.cpp \
     httpmgr.cpp \
     listitembase.cpp \
@@ -53,6 +54,7 @@ HEADERS += \
     clickedbtn.h \
     clickedlabel.h \
     customizeedit.h \
+    findsuccessdlg.h \
     global.h \
     httpmgr.h \
     listitembase.h \
@@ -77,6 +79,7 @@ FORMS += \
     chatdialog.ui \
     chatpage.ui \
     chatuserwid.ui \
+    findsuccessdlg.ui \
     loadingdlg.ui \
     logindialog.ui \
     mainwindow.ui \
@@ -99,11 +102,28 @@ RESOURCES += \
 DISTFILES += \
     config.ini
 
-win32:CONFIG(debug, debug | release)
-{
+CONFIG(debug, debug | release) {
     TargetConfig = $${PWD}/config.ini
     TargetConfig = $$replace(TargetConfig, /, \\)
     OutputDir =  $${OUT_PWD}/$${DESTDIR}
     OutputDir = $$replace(OutputDir, /, \\)
-    QMAKE_POST_LINK += copy /Y \"$$TargetConfig\" \"$$OutputDir\"
+    QMAKE_POST_LINK += copy /Y \"$$TargetConfig\" \"$$OutputDir\" &
+
+    # static path file
+    StaticDir = $${PWD}/static
+    StaticDir = $$replace(StaticDir, /, \\)
+    QMAKE_POST_LINK += xcopy /Y /E /I \"$$StaticDir\" \"$$OutputDir\\static\\\"
+} else {
+    TargetConfig = $${PWD}/config.ini
+    TargetConfig = $$replace(TargetConfig, /, \\)
+    OutputDir =  $${OUT_PWD}/$${DESTDIR}
+    OutputDir = $$replace(OutputDir, /, \\)
+    QMAKE_POST_LINK += copy /Y \"$$TargetConfig\" \"$$OutputDir\" &
+
+    # static path file
+    StaticDir = $${PWD}/static
+    StaticDir = $$replace(StaticDir, /, \\)
+    QMAKE_POST_LINK += xcopy /Y /E /I \"$$StaticDir\" \"$$OutputDir\\static\\\"
 }
+
+win32-msvc*:QMAKE_CXXFLAGS += /wd"4819" /utf-8

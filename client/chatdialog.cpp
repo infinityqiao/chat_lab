@@ -74,6 +74,11 @@ ChatDialog::ChatDialog(QWidget *parent)
 
     // ShowSearch(false);
 
+    // 清空搜索框
+    this->installEventFilter(this); // 安装事件过滤器
+
+    // 聊天 label 选中状态
+    ui->side_chat_lb->SetSelected(true);
 }
 
 ChatDialog::~ChatDialog()
@@ -125,6 +130,31 @@ void ChatDialog::addChatUserList()
         item->setSizeHint(chat_user_wid->sizeHint());
         ui->chat_user_list->addItem(item);
         ui->chat_user_list->setItemWidget(item, chat_user_wid);
+    }
+}
+
+bool ChatDialog::eventFilter(QObject *watched, QEvent *event)
+{
+    if (event->type() == QEvent::MouseButtonPress) {
+        QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
+        handleGlobalMousePress(mouseEvent);
+    }
+    return QDialog::eventFilter(watched, event);
+}
+
+void ChatDialog::handleGlobalMousePress(QMouseEvent *event)
+{
+    // 是否处于搜索模式
+    if( _mode != ChatUIMode::SearchMode){
+        return;
+    }
+
+    // 鼠标点击位置
+    QPoint posInSearchList = ui->search_list->mapFromGlobal(event->globalPos());
+    // 是否在聊天列表
+    if (!ui->search_list->rect().contains(posInSearchList)) {
+        ui->search_edit->clear();
+        ShowSearch(false);
     }
 }
 

@@ -17,7 +17,9 @@ public:
     explicit ChatDialog(QWidget *parent = nullptr);
     ~ChatDialog();
     void addChatUserList();
-
+protected:
+    bool eventFilter(QObject *watched, QEvent *event) override ;
+    void handleGlobalMousePress(QMouseEvent *event);
 
 private:
     void ShowSearch(bool bsearch = false);
