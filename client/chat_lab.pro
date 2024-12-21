@@ -11,6 +11,7 @@ RC_ICONS = icon.ico
 DESTDIR = ./bin
 
 SOURCES += \
+    adduseritem.cpp \
     bubbleframe.cpp \
     chatdialog.cpp \
     chatitembase.cpp \
@@ -24,6 +25,7 @@ SOURCES += \
     global.cpp \
     httpmgr.cpp \
     listitembase.cpp \
+    loadingdlg.cpp \
     logindialog.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -31,12 +33,16 @@ SOURCES += \
     picturebubble.cpp \
     registerdialog.cpp \
     resetdialog.cpp \
+    searchlist.cpp \
+    statewidget.cpp \
     tcpmgr.cpp \
     textbubble.cpp \
     timerbtn.cpp \
+    userdata.cpp \
     usermgr.cpp
 
 HEADERS += \
+    adduseritem.h \
     bubbleframe.h \
     chatdialog.h \
     chatitembase.h \
@@ -50,22 +56,28 @@ HEADERS += \
     global.h \
     httpmgr.h \
     listitembase.h \
+    loadingdlg.h \
     logindialog.h \
     mainwindow.h \
     messagetextedit.h \
     picturebubble.h \
     registerdialog.h \
     resetdialog.h \
+    searchlist.h \
     singleton.h \
+    statewidget.h \
     tcpmgr.h \
     textbubble.h \
     timerbtn.h \
+    userdata.h \
     usermgr.h
 
 FORMS += \
+    adduseritem.ui \
     chatdialog.ui \
     chatpage.ui \
     chatuserwid.ui \
+    loadingdlg.ui \
     logindialog.ui \
     mainwindow.ui \
     registerdialog.ui \

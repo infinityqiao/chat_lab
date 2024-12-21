@@ -5,6 +5,7 @@
 #include <chatuserwid.h>
 #include <QMovie>
 #include <QTimer>
+#include "loadingdlg.h"
 
 ChatDialog::ChatDialog(QWidget *parent)
     : QDialog(parent)
@@ -42,12 +43,37 @@ ChatDialog::ChatDialog(QWidget *parent)
         ShowSearch(false);
     });
 
+    ui->search_edit->SetMaxLength(15);
     ShowSearch(false);
 
     //连接加载信号和槽
     connect(ui->chat_user_list, &ChatUserList::sig_loading_chat_user, this, &ChatDialog::slot_loading_chat_user);
 
     addChatUserList();
+
+    QPixmap pixmap(":/res/head_1.jpg");
+    ui->side_head_lb->setPixmap(pixmap); // 将图片设置到QLabel上
+    QPixmap scaledPixmap = pixmap.scaled( ui->side_head_lb->size(), Qt::KeepAspectRatio); // 将图片缩放到label的大小
+    ui->side_head_lb->setPixmap(scaledPixmap); // 将缩放后的图片设置到QLabel上
+    ui->side_head_lb->setScaledContents(true); // 设置QLabel自动缩放图片内容以适应大小
+
+    ui->side_chat_lb->setProperty("state","normal");
+
+    ui->side_chat_lb->SetState("normal","hover","pressed","selected_normal","selected_hover","selected_pressed");
+
+    ui->side_contact_lb->SetState("normal","hover","pressed","selected_normal","selected_hover","selected_pressed");
+
+    AddLBGroup(ui->side_chat_lb);
+    AddLBGroup(ui->side_contact_lb);
+
+    connect(ui->side_chat_lb, &StateWidget::clicked, this, &ChatDialog::slot_side_chat);
+    connect(ui->side_contact_lb, &StateWidget::clicked, this, &ChatDialog::slot_side_contact);
+
+    // 链接搜索框输入变化
+    connect(ui->search_edit, &QLineEdit::textChanged, this, &ChatDialog::slot_text_changed);
+
+    // ShowSearch(false);
+
 }
 
 ChatDialog::~ChatDialog()
@@ -122,6 +148,22 @@ void ChatDialog::ShowSearch(bool bsearch)
     }
 }
 
+void ChatDialog::AddLBGroup(StateWidget* lb)
+{
+    _lb_list.push_back(lb);
+}
+
+void ChatDialog::ClearLabelState(StateWidget *lb)
+{
+    for(auto & ele: _lb_list){
+        if(ele == lb){
+            continue;
+        }
+
+        ele->ClearState();
+    }
+}
+
 void ChatDialog::slot_loading_chat_user()
 {
     if(_b_loading){
@@ -129,27 +171,45 @@ void ChatDialog::slot_loading_chat_user()
     }
 
     _b_loading = true;
+    LoadingDlg *loadingDialog = new LoadingDlg(this);
+    loadingDialog->setModal(true);
+    loadingDialog->show();
+    qDebug() << "add new data to list.....";
+    addChatUserList();
+    // 加载完成后关闭对话框
+    loadingDialog->deleteLater();
 
-    QLabel *loading_item = new QLabel(this);
-    QMovie *movie = new QMovie(":/res/loading.gif");
+    _b_loading = false;
+}
 
-    loading_item->setMovie(movie);
-    loading_item->setFixedSize(250, 70);
-    loading_item->setAlignment(Qt::AlignCenter);
-    movie->setScaledSize(QSize(20,20));
+void ChatDialog::slot_side_chat()
+{
+    // qDebug()<< "receive side chat clicked";
+    ClearLabelState(ui->side_chat_lb);
+    ui->stackedWidget->setCurrentWidget(ui->chat_page);
+    _state = ChatUIMode::ChatMode;
+    ShowSearch(false);
+}
 
-    QListWidgetItem *item = new QListWidgetItem;
-    item->setSizeHint(QSize(250, 70));
-    ui->chat_user_list->addItem(item);
-    ui->chat_user_list->setItemWidget(item, loading_item);
-    movie->start();
+void ChatDialog::slot_side_contact(){
+    // qDebug()<< "receive side contact clicked";
+    ClearLabelState(ui->side_contact_lb);
+    //设置
+    if(_last_widget == nullptr){
+        ui->stackedWidget->setCurrentWidget(ui->friend_apply_page);
+        _last_widget = ui->friend_apply_page;
+    }else{
+        ui->stackedWidget->setCurrentWidget(_last_widget);
+    }
 
-    QTimer::singleShot(0, this, [this, item]() {
-        qDebug() << "add new Data to list";
-        addChatUserList();
-        ui->chat_user_list->takeItem(ui->chat_user_list->row(item));
-        ui->chat_user_list->update();
-        _b_loading = false;
-    });
+    _state = ChatUIMode::ContactMode;
+    ShowSearch(false);
+}
 
+void ChatDialog::slot_text_changed(const QString &str)
+{
+    //qDebug()<< "receive slot text changed str is " << str;
+    if (!str.isEmpty()) {
+        ShowSearch(true);
+    }
 }
