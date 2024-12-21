@@ -86,34 +86,6 @@ ChatDialog::~ChatDialog()
     delete ui;
 }
 
-std::vector<QString>  strs ={
-    "我好想吃草莓啊，可是草莓太贵了",
-    "Man！What Can I say？",
-    "Mamba Out！See u again",
-    "那我问你那我问你，你是男的女的",
-    "白银说的话，就像是癌症晚期说的话，他都这样了，你为什么不顺从他呢。"
-};
-
-std::vector<QString> heads = {
-    ":/res/head_1.jpg",
-    ":/res/head_2.jpg",
-    ":/res/head_3.jpg",
-    ":/res/head_4.jpg",
-    ":/res/head_5.jpg"
-};
-
-std::vector<QString> names = {
-    "奶龙",
-    "阿诺",
-    "otto",
-    "last丶炫",
-    "阿梓从小就很可爱",
-    "范小勤",
-    "科比·布莱恩特",
-    "墨茶official"
-};
-
-
 void ChatDialog::addChatUserList()
 {
     // 创建QListWidgetItem，并设置自定义的widget
