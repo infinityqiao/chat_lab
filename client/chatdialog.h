@@ -18,13 +18,15 @@ class ChatDialog : public QDialog
 public:
     explicit ChatDialog(QWidget *parent = nullptr);
     ~ChatDialog();
-    void addChatUserList();
+
 protected:
     bool eventFilter(QObject *watched, QEvent *event) override ;
     void handleGlobalMousePress(QMouseEvent *event);
+    void CloseFindDlg();
     void UpdateChatMsg(std::vector<std::shared_ptr<TextChatData>> msgdata);
 
 private:
+    void addChatUserList();
     void ShowSearch(bool bsearch = false);
     void AddLBGroup(StateWidget* lb);
     void loadMoreChatUser();
@@ -46,6 +48,7 @@ public slots:
     void slot_side_chat();
     void slot_side_contact();
     void slot_text_changed(const QString & str);
+    void slot_focus_out();
     void slot_apply_friend(std::shared_ptr<AddFriendApply> apply);
     void slot_add_auth_friend(std::shared_ptr<AuthInfo> auth_info);
     void slot_auth_rsp(std::shared_ptr<AuthRsp> auth_rsp);
@@ -56,6 +59,7 @@ public slots:
     void slot_item_clicked(QListWidgetItem *item);
     void slot_text_chat_msg(std::shared_ptr<TextChatMsg> msg);
     void slot_append_send_chat_msg(std::shared_ptr<TextChatData> msgdata);
+    void slot_show_search(bool show);
 };
 
 #endif // CHATDIALOG_H

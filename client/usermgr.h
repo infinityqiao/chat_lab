@@ -18,6 +18,7 @@ public:
     void SetToken(QString token);
     int GetUid();
     QString GetName();
+    QString GetIcon();
     std::vector<std::shared_ptr<ApplyInfo>> GetApplyList();
     bool AlreadyApply(int uid);
     void AddApplyList(std::shared_ptr<ApplyInfo> app);
@@ -41,7 +42,6 @@ private:
     QString _token;
     int _chat_loaded;
     int _contact_loaded;
-
     std::vector<std::shared_ptr<ApplyInfo>> _apply_list;
     std::vector<std::shared_ptr<FriendInfo>> _friend_list;
     QMap<int, std::shared_ptr<FriendInfo>> _friend_map;

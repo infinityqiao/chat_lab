@@ -26,6 +26,11 @@ QString UserMgr::GetName()
     return _user_info->_name;
 }
 
+QString UserMgr::GetIcon()
+{
+    return _user_info->_icon;
+}
+
 std::vector<std::shared_ptr<ApplyInfo> > UserMgr::GetApplyList()
 {
     return _apply_list;

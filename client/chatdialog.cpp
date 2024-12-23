@@ -56,8 +56,8 @@ ChatDialog::ChatDialog(QWidget *parent)
 
     addChatUserList();
 
+    QString head_icon = UserMgr::GetInstance()->GetIcon();
     QPixmap pixmap(":/res/head_1.jpg");
-    ui->side_head_lb->setPixmap(pixmap); // 将图片设置到QLabel上
     QPixmap scaledPixmap = pixmap.scaled( ui->side_head_lb->size(), Qt::KeepAspectRatio); // 将图片缩放到label的大小
     ui->side_head_lb->setPixmap(scaledPixmap); // 将缩放后的图片设置到QLabel上
     ui->side_head_lb->setScaledContents(true); // 设置QLabel自动缩放图片内容以适应大小
@@ -77,7 +77,7 @@ ChatDialog::ChatDialog(QWidget *parent)
     // 链接搜索框输入变化
     connect(ui->search_edit, &QLineEdit::textChanged, this, &ChatDialog::slot_text_changed);
 
-    // ShowSearch(false);
+    ShowSearch(false);
 
     // 清空搜索框
     this->installEventFilter(this); // 安装事件过滤器
@@ -85,13 +85,13 @@ ChatDialog::ChatDialog(QWidget *parent)
     // 聊天 label 选中状态
     ui->side_chat_lb->SetSelected(true);
 
-    // search edit
-    ui->search_list->SetSearchEdit(ui->search_edit);
-
     //设置选中条目
     SetSelectChatItem();
     //更新聊天界面信息
     SetSelectChatPage();
+
+    // search edit
+    ui->search_list->SetSearchEdit(ui->search_edit);
 
     // 连接申请添加好友信号
     connect(TcpMgr::GetInstance().get(), &TcpMgr::sig_friend_apply, this, &ChatDialog::slot_apply_friend);
@@ -124,6 +124,9 @@ ChatDialog::ChatDialog(QWidget *parent)
     //连接联系人页面点击好友申请条目的信号
     connect(ui->con_user_list, &ContactUserList::sig_switch_apply_friend_page,
             this,&ChatDialog::slot_switch_apply_friend_page);
+
+    //连接清除搜索框操作
+    connect(ui->friend_apply_page, &ApplyFriendPage::sig_show_search, this, &ChatDialog::slot_show_search);
 
     //连接聊天列表点击信号
     connect(ui->chat_user_list, &QListWidget::itemClicked, this, &ChatDialog::slot_item_clicked);
@@ -209,6 +212,11 @@ void ChatDialog::handleGlobalMousePress(QMouseEvent *event)
     }
 }
 
+void ChatDialog::CloseFindDlg()
+{
+    ui->search_list->CloseFindDlg();
+}
+
 void ChatDialog::UpdateChatMsg(std::vector<std::shared_ptr<TextChatData> > msgdata)
 {
     for(auto & msg : msgdata){
@@ -219,7 +227,6 @@ void ChatDialog::UpdateChatMsg(std::vector<std::shared_ptr<TextChatData> > msgda
         ui->chat_page->AppendChatMsg(msg);
     }
 }
-
 
 void ChatDialog::ShowSearch(bool bsearch)
 {
@@ -290,7 +297,6 @@ void ChatDialog::loadMoreConUser()
     }
 }
 
-
 void ChatDialog::ClearLabelState(StateWidget *lb)
 {
     for(auto & ele: _lb_list){
@@ -339,7 +345,6 @@ void ChatDialog::slot_loading_contact_user()
     _b_loading = false;
 }
 
-
 void ChatDialog::slot_side_chat()
 {
     // qDebug()<< "receive side chat clicked";
@@ -374,6 +379,12 @@ void ChatDialog::slot_text_changed(const QString &str)
     if (!str.isEmpty()) {
         ShowSearch(true);
     }
+}
+
+void ChatDialog::slot_focus_out()
+{
+    qDebug()<< "receive focus out signal";
+    ShowSearch(false);
 }
 
 void ChatDialog::slot_apply_friend(std::shared_ptr<AddFriendApply> apply)
@@ -603,7 +614,6 @@ void ChatDialog::slot_text_chat_msg(std::shared_ptr<TextChatMsg> msg)
 
 }
 
-
 void ChatDialog::slot_append_send_chat_msg(std::shared_ptr<TextChatData> msgdata) {
     if (_cur_chat_uid == 0) {
         return;
@@ -645,7 +655,10 @@ void ChatDialog::slot_append_send_chat_msg(std::shared_ptr<TextChatData> msgdata
     }
 }
 
-
+void ChatDialog::slot_show_search(bool show)
+{
+    ShowSearch(show);
+}
 
 void ChatDialog::SetSelectChatItem(int uid)
 {
@@ -741,7 +754,7 @@ void ChatDialog::SetSelectChatPage(int uid)
 
         //设置信息
         auto user_info = con_item->GetUserInfo();
-        // ui->chat_page->SetUserInfo(user_info);
+        ui->chat_page->SetUserInfo(user_info);
 
         return;
     }
