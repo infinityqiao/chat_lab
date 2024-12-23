@@ -3,8 +3,8 @@
 
 ApplyFriendItem::ApplyFriendItem(QWidget *parent)
     : ListItemBase(parent)
-    , _added(false),
-    ui(new Ui::ApplyFriendItem)
+    , ui(new Ui::ApplyFriendItem)
+    , _added(false)
 {
     ui->setupUi(this);
     SetItemType(ListItemType::APPLY_FRIEND_ITEM);

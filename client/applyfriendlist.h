@@ -12,6 +12,8 @@ public:
 protected:
     bool eventFilter(QObject *watched, QEvent *event) override;
 
+private slots:
+
 signals:
     void sig_show_search(bool);
 };

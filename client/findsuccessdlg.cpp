@@ -13,7 +13,7 @@ FindSuccessDlg::FindSuccessDlg(QWidget *parent)
     setWindowTitle("添加");
     // 隐藏对话框标题栏
     setWindowFlags(windowFlags() | Qt::FramelessWindowHint);
-    this->setObjectName("FindSuccessDlg");
+    // this->setObjectName("FindSuccessDlg");
     // 获取当前应用程序的路径
     QString app_path = QCoreApplication::applicationDirPath();
     QString pix_path = QDir::toNativeSeparators(app_path +

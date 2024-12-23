@@ -16,27 +16,40 @@ ChatUserWid::~ChatUserWid()
 
 QSize ChatUserWid::sizeHint() const
 {
-    return QSize(250, 70);
+    return QSize(250, 70); // 返回自定义的尺寸
 }
 
-void ChatUserWid::SetInfo(QString name, QString head, QString msg)
+void ChatUserWid::SetInfo(std::shared_ptr<UserInfo> user_info)
 {
-    _name = name;
-    _head = head;
-    _msg = msg;
+    _user_info = user_info;
+    // 加载图片
+    QPixmap pixmap(_user_info->_icon);
 
-    QPixmap pixmap(_head);
-
-    ui->icon_lb->setPixmap((pixmap.scaled(ui->icon_lb->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation)));
+    // 设置图片自动缩放
+    ui->icon_lb->setPixmap(pixmap.scaled(ui->icon_lb->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
     ui->icon_lb->setScaledContents(true);
 
-    QFontMetrics fontMetrics_name(ui->user_name_lb->font());
-    QString nameText = fontMetrics_name.elidedText(_name, Qt::ElideRight, ui->user_name_lb->width());
-    QFontMetrics fontMetrics_msg(ui->user_chat_lb->font());
-    QString msgText = fontMetrics_msg.elidedText(_msg, Qt::ElideRight, ui->user_chat_lb->width());
+    ui->user_name_lb->setText(_user_info->_name);
+    ui->user_chat_lb->setText(_user_info->_last_msg);
+}
 
-    ui->user_name_lb->setText(nameText);
-    ui->user_chat_lb->setText(msgText);
+void ChatUserWid::SetInfo(std::shared_ptr<FriendInfo> friend_info)
+{
+    _user_info = std::make_shared<UserInfo>(friend_info);
+    // 加载图片
+    QPixmap pixmap(_user_info->_icon);
+
+    // 设置图片自动缩放
+    ui->icon_lb->setPixmap(pixmap.scaled(ui->icon_lb->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    ui->icon_lb->setScaledContents(true);
+
+    ui->user_name_lb->setText(_user_info->_name);
+    ui->user_chat_lb->setText(_user_info->_last_msg);
+}
+
+std::shared_ptr<UserInfo> ChatUserWid::GetUserInfo()
+{
+    return _user_info;
 }
 
 

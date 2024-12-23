@@ -11,6 +11,7 @@
 #include <QByteArray>
 #include <QNetworkReply>
 #include <QJsonObject>
+#include <QJsonDocument>
 #include <QDir>
 #include <QSettings>
 /******************************************************************************
