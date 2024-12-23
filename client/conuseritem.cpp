@@ -71,3 +71,8 @@ void ConUserItem::ShowRedPoint(bool show)
 
 }
 
+std::shared_ptr<UserInfo> ConUserItem::GetInfo()
+{
+    return _info;
+}
+

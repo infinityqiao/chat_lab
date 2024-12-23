@@ -22,6 +22,7 @@ public:
 protected:
     bool eventFilter(QObject *watched, QEvent *event) override ;
     void handleGlobalMousePress(QMouseEvent *event);
+    void UpdateChatMsg(std::vector<std::shared_ptr<TextChatData>> msgdata);
 
 private:
     void ShowSearch(bool bsearch = false);
@@ -49,6 +50,12 @@ public slots:
     void slot_add_auth_friend(std::shared_ptr<AuthInfo> auth_info);
     void slot_auth_rsp(std::shared_ptr<AuthRsp> auth_rsp);
     void slot_jump_chat_item(std::shared_ptr<SearchInfo> si);
+    void slot_friend_info_page(std::shared_ptr<UserInfo> user_info);
+    void slot_switch_apply_friend_page();
+    void slot_jump_chat_item_from_infopage(std::shared_ptr<UserInfo> user_info);
+    void slot_item_clicked(QListWidgetItem *item);
+    void slot_text_chat_msg(std::shared_ptr<TextChatMsg> msg);
+    void slot_append_send_chat_msg(std::shared_ptr<TextChatData> msgdata);
 };
 
 #endif // CHATDIALOG_H
