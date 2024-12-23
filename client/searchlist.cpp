@@ -6,6 +6,7 @@
 #include "userdata.h"
 #include <QJsonDocument>
 #include "findfaildlg.h"
+#include "usermgr.h"
 
 SearchList::SearchList(QWidget *parent)
     : QListWidget(parent)
@@ -155,6 +156,15 @@ void SearchList::slot_user_search(std::shared_ptr<SearchInfo> si)
     if(si == nullptr){
         _find_dlg = std::make_shared<FindFailDlg>(this);
     }else{
+        auto self_uid = UserMgr::GetInstance()->GetUid();
+        if (si->_uid == self_uid) {
+            return;
+        }
+        bool bExist = UserMgr::GetInstance()->CheckFriendById(si->_uid);
+        if(bExist){
+            emit sig_jump_chat_item(si);
+            return;
+        }
         _find_dlg = std::make_shared<FindSuccessDlg>(this);
         std::dynamic_pointer_cast<FindSuccessDlg>(_find_dlg)->SetSearchInfo(si);
     }

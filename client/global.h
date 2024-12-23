@@ -148,4 +148,6 @@ const std::vector<QString> names = {
     "墨茶official"
 };
 
+const int CHAT_COUNT_PER_PAGE = 13;
+
 #endif // GLOBAL_H
