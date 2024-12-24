@@ -15,7 +15,7 @@ protected:
     bool eventFilter(QObject *o, QEvent *e) override;
     void paintEvent(QPaintEvent *event) override;
 private slots:
-    void onVScrollBarMoved();
+    void onVScrollBarMoved(int min, int max);
 
 private:
     // QWidget *m_pCenterWidget;

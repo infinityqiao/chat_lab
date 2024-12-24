@@ -133,7 +133,21 @@ RESOURCES += \
     rc.qrc
 
 DISTFILES += \
-    config.ini
+    config.ini \
+    res/head_10.jpg \
+    res/head_11.jpg \
+    res/head_12.jpg \
+    res/head_13.jpg \
+    res/head_14.jpg \
+    res/head_15.jpg \
+    res/head_16.jpg \
+    res/head_3.jpg \
+    res/head_4.jpg \
+    res/head_5.jpg \
+    res/head_6.jpg \
+    res/head_7.jpg \
+    res/head_8.jpg \
+    res/head_9.jpg
 
 CONFIG(debug, debug | release) {
     TargetConfig = $${PWD}/config.ini

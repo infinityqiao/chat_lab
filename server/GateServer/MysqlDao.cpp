@@ -56,6 +56,87 @@ int MysqlDao::RegUser(const std::string& name, const std::string& email, const s
 	}
 }
 
+int MysqlDao::RegUserTransaction(const std::string& name, const std::string& email, const std::string& pwd,
+	const std::string& icon)
+{
+	auto con = pool_->getConnection();
+	if (con == nullptr) {
+		return false;
+	}
+
+	Defer defer([this, &con] {
+		pool_->returnConnection(std::move(con));
+		});
+
+	try {
+		con->_con->setAutoCommit(false);
+
+		std::unique_ptr<sql::PreparedStatement> pstmt_email(con->_con->prepareStatement("SELECT 1 FROM user WHERE email = ?"));
+
+		pstmt_email->setString(1, email);
+
+		std::unique_ptr<sql::ResultSet> res_email(pstmt_email->executeQuery());
+
+		auto email_exist = res_email->next();
+		if (email_exist) {
+			con->_con->rollback();
+			std::cout << "email " << email << " exist";
+			return 0;
+		}
+
+		std::unique_ptr<sql::PreparedStatement> pstmt_name(con->_con->prepareStatement("SELECT 1 FROM user WHERE name = ?"));
+
+		pstmt_name->setString(1, name);
+
+		std::unique_ptr<sql::ResultSet> res_name(pstmt_name->executeQuery());
+
+		auto name_exist = res_name->next();
+		if (name_exist) {
+			con->_con->rollback();
+			std::cout << "name " << name << " exist";
+			return 0;
+		}
+
+		std::unique_ptr<sql::PreparedStatement> pstmt_upid(con->_con->prepareStatement("UPDATE user_id SET id = id + 1"));
+
+		pstmt_upid->executeUpdate();
+
+		std::unique_ptr<sql::PreparedStatement> pstmt_uid(con->_con->prepareStatement("SELECT id FROM user_id"));
+		std::unique_ptr<sql::ResultSet> res_uid(pstmt_uid->executeQuery());
+		int newId = 0;
+		if (res_uid->next()) {
+			newId = res_uid->getInt("id");
+		}
+		else {
+			std::cout << "select id from user_id failed" << std::endl;
+			con->_con->rollback();
+			return -1;
+		}
+
+		std::unique_ptr<sql::PreparedStatement> pstmt_insert(con->_con->prepareStatement("INSERT INTO user (uid, name, email, pwd, nick, icon) "
+			"VALUES (?, ?, ?, ?,?,?)"));
+		pstmt_insert->setInt(1, newId);
+		pstmt_insert->setString(2, name);
+		pstmt_insert->setString(3, email);
+		pstmt_insert->setString(4, pwd);
+		pstmt_insert->setString(5, name);
+		pstmt_insert->setString(6, icon);
+		pstmt_insert->executeUpdate();
+		con->_con->commit();
+		std::cout << "newuser insert into user success" << std::endl;
+		return newId;
+	}
+	catch (sql::SQLException& e) {
+		if (con) {
+			con->_con->rollback();
+		}
+		std::cerr << "SQLException: " << e.what();
+		std::cerr << " (MySQL error code: " << e.getErrorCode();
+		std::cerr << ", SQLState: " << e.getSQLState() << " )" << std::endl;
+		return -1;
+	}
+}
+
 bool MysqlDao::CheckEmail(const std::string& name, const std::string& email) {
 	auto con = pool_->getConnection();
 	try {

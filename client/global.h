@@ -126,18 +126,40 @@ const std::vector<QString> strs ={
     "Man！What Can I say？",
     "Mamba Out！See u again",
     "那我问你那我问你，你是男的女的",
-    "白银说的话，就像是癌症晚期说的话，他都这样了，你为什么不顺从他呢。"
+    "白银说的话，就像是癌症晚期说的话，他都这样了，你为什么不顺从他呢。",
+    "你说得对，但这就是奎桑提，4700HP，300护甲，200魔抗",
+    "无论你是跑酷大神，还是PVP大佬，还是PVP大佬，还是PVP大佬，还是PVP大佬，",
+    "兄弟，兄弟，你好香",
+    "打开你的电视机，大·家·们·的欲望之友，田中时价购物网",
+    "时代少年团，我们喜欢你，我们喜欢马嘉祺丁程鑫宋亚轩",
+    "大香蕉，一条大香蕉，你的感觉真的很奇妙~",
+    "我是逆蝶，逆风飞翔的蝶，哪怕轰轰烈烈",
+    "你是抱着怎样的决心说出这句话的，你能够肩负起别人的人生吗？"
+    "莲瓣入水而不苦根，勿执着，安存法度之外，或不失于梦幻泡影，奇妙"
 };
 
 const std::vector<QString> heads = {
-    ":/res/head_1.jpg",
-    ":/res/head_2.jpg",
-    ":/res/head_3.jpg",
-    ":/res/head_4.jpg",
-    ":/res/head_5.jpg"
+    ":/res/head_6.jpg",
+    ":/res/head_7.jpg",
+    ":/res/head_8.jpg",
+    ":/res/head_9.jpg",
+    ":/res/head_10.jpg",
+    ":/res/head_11.jpg",
+    ":/res/head_12.jpg",
+    ":/res/head_13.jpg",
+    ":/res/head_14.jpg",
+    ":/res/head_15.jpg",
+    ":/res/head_16.jpg"
 };
 
 const std::vector<QString> names = {
+    "曼波",
+    "柯洁",
+    "五条悟",
+    "特雷西娅",
+    "咸鱼梦想家",
+    "魂5",
+    "星野爱",
     "奶龙",
     "阿诺",
     "otto",
@@ -145,7 +167,8 @@ const std::vector<QString> names = {
     "阿梓从小就很可爱",
     "范小勤",
     "科比·布莱恩特",
-    "墨茶official"
+    "墨茶official",
+    "奎隆",
 };
 
 const int CHAT_COUNT_PER_PAGE = 13;

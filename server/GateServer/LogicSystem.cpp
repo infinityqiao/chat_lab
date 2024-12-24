@@ -103,6 +103,7 @@ LogicSystem::LogicSystem()
         auto name = src_root["user"].asString();
         auto pwd = src_root["passwd"].asString();
         auto confirm = src_root["confirm"].asString();
+        auto icon = src_root["icon"].asString();
 
         if (pwd != confirm) {
             std::cout << "password err " << std::endl;
@@ -132,7 +133,7 @@ LogicSystem::LogicSystem()
         }
 
         //查找数据库判断用户是否存在
-        int uid = MysqlMgr::GetInstance()->RegUser(name, email, pwd);
+        int uid = MysqlMgr::GetInstance()->RegUser(name, email, pwd, icon);
         if (uid == 0 || uid == -1) {
             std::cout << " user or email exist" << std::endl;
             root["error"] = ErrorCodes::UserExist;

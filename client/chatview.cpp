@@ -87,7 +87,7 @@ void ChatView::paintEvent(QPaintEvent *event)
     style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
-void ChatView::onVScrollBarMoved()
+void ChatView::onVScrollBarMoved(int min, int max)
 {
     if(isAppended) // 添加item可能调用多次
     {
